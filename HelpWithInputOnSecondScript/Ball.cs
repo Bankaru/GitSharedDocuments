@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-
+/*  THANK YOU FOR REVIEWING THE CODE FOR ME.  MOUSE INPUT IS NOT REGISTERING AT ALL IN THIS SCRIPT.  THE SAME CODE WORKS IN THE PLAYERCONTROLLER SCRIPT.  I'M NOT SURE WHY IT WON'T WORK HERE...
+    LINE 30, 44: InputAsset variable declared on line 30, instantiated in line 44.
+    LINES 143-157: Callbacks subscribed and unsubscribed to in OnEnable/OnDisable methods in lines 143-157.
+    LINES 34, 107-111: Mouse-Input holder variable declared in line 34.  Input context read and assigned to the variable in onMouseAim() lines 107-111.
+    LINES 113-141: Methods for returning mouse position on the screen and adjusting player orientation to it.
+    LINE 66: Aim() method based on booleans.  The booleans are met because the Start method makes ThrowingMode True, and the PlayerController's Start() method calls this script's GetPossession() method.
+*/
     //Public Variables
     public bool PlayerBallPossession;
     public bool ThrowingMode;
@@ -13,7 +19,7 @@ public class Ball : MonoBehaviour
 
     //External Public and Serialized References
     [SerializeField] FootballGameManager _footballGameManager;
-    [SerializeField] Transform _quarterbackBallPosition;
+    //[SerializeField] Transform _quarterbackBallPosition;
     [SerializeField] GameObject _quarterback;
     [SerializeField] Camera _mainCamera;
     [SerializeField] private LayerMask _groundMask;
@@ -21,11 +27,11 @@ public class Ball : MonoBehaviour
     //Component References
     private Rigidbody _projectileRb;
     private Transform _ballCarrier;
-    PlayerControls _playerControls; //AIMSCRIPTD
+    PlayerControls _playerControls; //AIMSCRIPT
 
 
     //Private Variables
-    private Vector2 _currentMouseInput;
+    private Vector2 _currentMouseInput; //AIMSCRIPT
 
     private Vector3 _throwTarget;
 
@@ -44,7 +50,7 @@ public class Ball : MonoBehaviour
 
         PlayerBallPossession = true;
         _projectileRb = GetComponent<Rigidbody>();
-        //ThrowingMode = true; // delete or fix logic.
+        ThrowingMode = true; // delete or fix logic.
 
 
     }
@@ -80,16 +86,10 @@ public class Ball : MonoBehaviour
         }
     }
 
-    //Force is controlled by the mouse inputs!!!!!!  So it must be a public variable straight from the Aim method of the player.  Should Aim be on the player?  Yes...
-    //It must be calculated from a given High Arch that is reduced until player releases.
-
-
-
-
 
     public void ThrowBall(Vector3 throwDirection, float force, float archForce)
     {
-        PlayerBallPossession = false; //TEMPORARY: Make Possession type Enum Later.
+        PlayerBallPossession = false;
         _projectileRb.useGravity = true;
         transform.SetParent(null);
 
@@ -106,8 +106,8 @@ public class Ball : MonoBehaviour
 //  INPUT INFORMATION FOR BALL.
     void onMouseAim(InputAction.CallbackContext context) //AIMSCRIPT
     {
-        Debug.Log("Context: " + context);
         _currentMouseInput = context.ReadValue<Vector2>();
+        Debug.Log("CurrentMouseInput = " + _currentMouseInput);  //<<<<<<<THIS NEVER PRINTS TO SCREEN.  CONTEXT IS NEVER READ...
     }
 
     private void Aim() //AIMSCRIPT
@@ -120,8 +120,6 @@ public class Ball : MonoBehaviour
             _throwTarget = TargetPosition - _quarterback.transform.position;
             //throwTarget.y = 1;
             _quarterback.transform.forward = _throwTarget;
-            //What is the formula to derive the force + arch of a projectile given it's source and destination?
-            //This method's "position" is the destination.
         }
     }
 
@@ -129,7 +127,7 @@ public class Ball : MonoBehaviour
     private (bool success, Vector3 position) GetMousePosition() //AIMSCRIPT
     {
         var ray = _mainCamera.ScreenPointToRay(_currentMouseInput);
-        Debug.Log("CurrentMouseInput = " + _currentMouseInput);
+        
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _groundMask))
         {
             // The Raycast hit something, return the position.

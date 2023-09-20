@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour   //Class name must be the same as
     [SerializeField] Transform _ballPositionTransform;
 
     //declare reference variables
-    private PlayerControls _playerControls;              //Asset Reference name must be the same as the C# Script produced from Input Asset.
+    private PlayerControls _playerControls;              //Asset Reference name must be the same as the C# Script produced from Input Asset. //AIMSCRIPT
     private CharacterController _characterController;    //Reference to Unity's Character Controller Component
     private Animator _animator;                          //Animator Component
 
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour   //Class name must be the same as
     void Awake()
     {
         //initially set reference variables
-        _playerControls = new PlayerControls();
+        _playerControls = new PlayerControls(); //AIMSCRIPT
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         //Assignment of Animator Hash variables to paramaters in the Animator, which are in "quotes".
